@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+
+<title>Manager Fragments</title>
+
+</head>
+<body>
+	<th:block th:fragment="emptyLeaves">
+		<div class="alert alert-success">
+			<span class="glyphicon glyphicon-ok-sign"></span> All leaves taken
+			care off!
+		</div>
+	</th:block>
+
+	<th:block th:fragment="employees">
+		<div class="page-header"><h1>Employees List</h1></div>
+		<table class="table table-hover">
+			<thead>
+				<tr>
+					<th>Employee ID</th>
+					<th>Name</th>
+					<th>Status</th>
+					<th>Delete</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr th:each="employee: ${employees}">
+					<td th:text="${employee.id}">ID</td>
+					<td th:text="${employee.name}">Name</td>
+					<td>Status</td>
+					<td><a class="btn btn-danger delete-employee" href="#"><span
+							class="glyphicon glyphicon-minus-sign"></span> Delete</a></td>
+				</tr>
+			</tbody>
+		</table>
+		<a class="btn btn-success" id="add-employee"><span
+			class="glyphicon glyphicon-plus-sign"></span> Add Employee</a>
+	</th:block>
+
+	<th:block th:fragment="addEmployee">
+		<div class="page-header">
+			<h1>Register Employee</h1>
+		</div>
+		<form class="col-md-4">
+			<div class="form-group">
+				<label for="employee-name">Name</label> <input type="text"
+					class="form-control" id="employee-name" name="name"
+					placeholder="Employee Name"></input>
+			</div>
+			<div class="form-group">
+				<label for="employee-email">Email</label> <input type="email"
+					class="form-control" id="employee-email" name="email"
+					placeholder="Employee Email"></input>
+			</div>
+			<div class="form-group">
+				<label for="employee-password">Password</label> <input
+					type="password" class="form-control" id="employee-password"
+					name="password" placeholder="Password"></input>
+			</div>
+			<div class="form-group">
+				<label for="employee-confirm-password">Confirm Password</label> <input
+					type="password" class="form-control" id="employee-confirm-password"
+					placeholder="Confirm Password"></input>
+			</div>
+			<button type="submit" class="btn btn-primary col-md-5"
+				id="employee-register">Register</button>
+			<a class="btn btn-danger col-md-5 col-md-offset-2"
+				id="employee-register-cancel">Cancel</a>
+		</form>
+	</th:block>
+
+<th:block th:fragment="manageLeaves">
+    <div class="page-header"><h1>Manage Leaves</h1></div>
+    <table class="table table-hover">
+        <thead>
+        <tr>
+            <th>Employee Id</th>
+            <th>Employee Name</th>
+            <th>Leave Type</th>
+            <th>From</th>
+            <th>To</th>
+            <th>Accept</th>
+            <th>Reject</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="leaveAndEmployee: ${leavesAndEmployees}">
+            <td th:text="${leaveAndEmployee[0].employeeId}">Employee Id</td>
+            <td th:text="${leaveAndEmployee[1].name}">Employee Name</td>
+            <td th:text="${leaveAndEmployee[0].leaveType}">Leave Type</td>
+            <td th:text="${leaveAndEmployee[0].fromDate}">From</td>
+            <td th:text="${leaveAndEmployee[0].toDate}">To</td>
+            <td><a class="btn btn-success accept-leave">Accept</a></td>
+            <td><a class="btn btn-danger reject-leave">Reject</a></td>
+        </tr>
+        </tbody>
+    </table>
+</th:block>
+
+</body>
+</html>

@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+<!--/*/ <th:block th:include="fragments/include :: head"></th:block> /*/-->
+<title>Leave Manager App</title>
+</head>
+<body>
+
+<div class="jumbotron header">
+<h1 class="text-center">Leave Application Manager</h1>
+</div>
+	<div class="container">
+		<form class="form-signin" th:action="@{/}" method="post">
+			<h2 >Please sign in</h2>
+			<hr></hr>
+			<div class="form-group">
+			<label for="username" class="sr-only">Username</label>
+			<input class ="form-control" type="text" id="username" placeholder="Username" name="username" required="required" autofocus="autofocus"/>
+			</div>
+			<div class="form-group">
+			<label for="password" class="sr-only">Password</label>
+			<input class ="form-control" type="password" id="password" placeholder="Password" name="password" required="required" />
+			</div>
+			<div class="form-group">
+			<input type="checkbox" id="remember_me" name="remember-me" />
+			<label for="remember_me">Remember Me</label>
+			</div>
+			<button class="btn btn-lg btn-primary btn-block" type="submit" name="submit">Login</button>
+		</form>
+	</div>
+
+
+
+
+
+<!--/*/ <th:block th:include="fragments/include :: libscripts"></th:block> /*/-->
+</body>
+</html>

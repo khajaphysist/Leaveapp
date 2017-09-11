@@ -1,0 +1,53 @@
+@charset "UTF-8";
+
+.form-signin {
+	max-width: 330px;
+	padding: 15px;
+	margin: 0 auto;
+}
+
+.header {
+	background-color: rgb(161, 209, 255);
+	margin-bottom: 0px;
+}
+
+.header-text {
+	text-align: center;
+}
+
+.main {
+	margin-left: 0px;
+	margin-right: 0px;
+	padding-left: 0px;
+	padding-right: 0px;
+}
+
+.sidebar {
+	position: absolute;
+	top: 71px;
+	bottom: 0px;
+	left: 0px;
+	background-color: rgb(244,244,244);
+	padding: 0px;
+}
+
+.content-bar {
+	padding: 40px 50px;
+}
+
+
+#logout-btn {
+	position: absolute;
+	bottom:0px;
+	left:0px;
+}
+
+.tab-content {
+	display: none;
+}
+.content-bar div:first-child {
+	display: block;
+}
+.page-header {
+	margin-top: -30px;
+}

@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<!--/*/<th:block th:include="fragments/include :: head"></th:block>/*/-->
+<title>Manager</title>
+
+</head>
+<body>
+	<div class="navbar header">
+		<h1 class="header-text">Manager Portal</h1>
+	</div>
+	<div class="container-fluid main">
+		<div class="row">
+			<div class="col-lg-3 sidebar">
+				<ul class="nav nav-pills nav-stacked nav-list">
+					<li class="active"><a href="#manage-leaves">Leaves</a></li>
+					<li><a href="#manage-employees">Employees</a></li>
+				</ul>
+				<a th:href="@{/logout}" id="logout-btn"
+					class="btn btn-primary btn-block">Logout</a>
+			</div>
+			<div class="col-lg-9 col-lg-offset-3 content-bar">
+				<div class="tab-content" id="manage-leaves"></div>
+				<div class="tab-content" id="manage-employees"></div>
+			</div>
+		</div>
+	</div>
+
+
+	<!--/*/<th:block th:include="fragments/include :: libscripts"></th:block>/*/-->
+	<script>
+        //tabbing functionality
+        $('.nav-list li a').click(function(event) {
+            event.preventDefault();
+
+            $('.nav-list li').removeClass('active');
+            $(this).parent().addClass('active');
+
+
+            $('.tab-content').hide();
+            $($(this).attr('href')).show();
+        });
+
+        // showing list of pending leaves
+        $("a[href='#manage-leaves']").click(function(event) {
+            event.preventDefault();
+            $('#manage-leaves').load('/manager/leaves');
+        });
+        // showing list of employees
+        $("a[href='#manage-employees']").click(function(event) {
+            event.preventDefault();
+            $('#manage-employees').load('/manager/listEmployees');
+        });
+        // activating first link
+        $("a[href='#manage-leaves']").click();
+
+        // showing form to add employee
+        $('#manage-employees').on('click','#add-employee',function(event){
+            $('#manage-employees').load('/manager/addEmployee');
+        });
+
+        // submitting form to add employee
+        $('#manage-employees').on('submit','form',function(event){
+            event.preventDefault();
+            if($('#employee-password').val()==$('#employee-confirm-password').val()){
+                $.post('/manager/addEmployee',
+                    $('form').serialize(),function(){
+                        $('#manage-employees').load('/manager/listEmployees');
+                    });
+            }else{
+                alert("Passwords do not match!");
+            }
+        });
+
+        // cancel registration
+        $('#manage-employees').on('click','#employee-register-cancel',function(event){
+            event.preventDefault();
+            $('#manage-employees').load('/manager/listEmployees');
+        });
+
+        // deleting employee
+        $('#manage-employees').on('click','.delete-employee',function(event){
+            event.preventDefault();
+            var employeeId = $(event.target).closest('tr').children().first().html();
+            $.get('/manager/deleteEmployee/'+employeeId,function(response){
+                $('#manage-employees').html(response);
+            });
+        });
+
+        // accepting leaves
+        $('#manage-leaves').on('click','.accept-leave',function (event) {
+            var tmpEmployeeId = $(event.target).closest('tr').children().first().html();
+            $.get('/manager/manageLeaves',{employeeId:tmpEmployeeId,action:"Accept"},function () {
+                $("a[href='#manage-leaves']").click();
+            });
+        });
+
+        // rejecting leaves
+        $('#manage-leaves').on('click','.reject-leave',function (event) {
+            var tmpEmployeeId = $(event.target).closest('tr').children().first().html();
+            $.get('/manager/manageLeaves',{employeeId:tmpEmployeeId,action:"Reject"},function () {
+                $("a[href='#manage-leaves']").click();
+            });
+        });
+
+	</script>
+</body>
+</html>

@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<!--/*/<th:block th:include="fragments/include :: head"></th:block>/*/-->
+<title>Employee</title>
+
+</head>
+<body>
+	<div class="navbar header">
+		<h1 class="header-text">Employee Portal</h1>
+	</div>
+	<div class="container-fluid main">
+		<div class="row">
+			<div class="col-md-3 sidebar">
+				<ul class="nav nav-pills nav-stacked nav-list">
+					<li class="active"><a href="#leave-status">Leave Status</a></li>
+					<li><a href="#apply-leave">Apply Leave</a></li>
+					<li><a href="#view-leaves">View Leaves</a></li>
+				</ul>
+				<a id="logout-btn" class="btn btn-primary btn-block"
+					th:href="@{/logout}">Logout</a>
+			</div>
+			<div class="col-md-9  col-md-offset-3 content-bar">
+				<div class="tab-content" id="leave-status"></div>
+				<div class="tab-content" id="apply-leave"></div>
+				<div class="tab-content" id="view-leaves"></div>
+			</div>
+		</div>
+	</div>
+
+
+	<!--/*/<th:block th:include="fragments/include :: libscripts"></th:block>/*/-->
+	<script>
+	$('.nav-list li a').click(function(event) {
+		event.preventDefault();
+		$('.nav-list li').removeClass('active');
+		$(this).parent().addClass('active');
+
+		$('.tab-content').hide();
+		$($(this).attr('href')).show();
+	});
+
+	$('a[href="#leave-status"]').click(function(event){
+		event.preventDefault();
+		$('#leave-status').load(document.baseURI+'/leave-status',function () {
+		    switch ($('#leave-status-text').html()){
+                case 'Pending':
+                {
+                    $('#modify-leave').unbind();
+                    $('#modify-leave').click(function () {
+                        $('#leave-status').load(document.baseURI+'/cancel-pending-leave',function () {
+                            $('a[href="#leave-status"]').click();
+                        });
+                    });
+                    break;
+                }
+                case 'Accepted':
+                {
+                    $('#modify-leave').unbind();
+                    $('#modify-leave').html("Ok");
+                    $('#modify-leave').click(function () {
+                        $('#leave-status').load(document.baseURI+'/archive-accepted-leave',function () {
+                            $('a[href="#leave-status"]').click();
+                        });
+                    });
+                    break;
+                }
+                case 'Rejected':
+                {
+                    $('#modify-leave').unbind();
+                    $('#modify-leave').html("Ok");
+                    $('#modify-leave').click(function () {
+                        $('#leave-status').load(document.baseURI+'/delete-rejected-leave',function () {
+                            $('a[href="#leave-status"]').click();
+                        });
+                    });
+                    break;
+                }
+            }
+        });
+    });
+	$('a[href="#apply-leave"]').click(function(event){
+		event.preventDefault();
+		$('#apply-leave').load(document.baseURI+'/apply-leave',function () {
+		    //activating datepicker and setting defaults
+            $('.date-picker').datepicker();
+            $.datepicker.setDefaults({
+                dateFormat: "yy-mm-dd",
+                changeMonth: "true",
+                changeYear: "true",
+                minDate: 1,
+                maxDate: 90
+            });
+            //restricting toDate to values after fromDate
+            $('#to-date').prop('disabled',true);
+            $('#from-date').change(function () {
+                $('#to-date').prop('disabled',false);
+                $('#to-date').datepicker('option','minDate',$('#from-date').val());
+            });
+
+        });
+	});
+	$('a[href="#view-leaves"]').click(function(event){
+		event.preventDefault();
+		$('#view-leaves').load(document.baseURI+'/view-leaves');
+	});
+    $('a[href="#leave-status"]').click();
+
+    $('#apply-leave').on('submit','form',function(event){
+        event.preventDefault();
+        $.post(document.baseURI+'/apply-leave',$('form').serialize(),function () {
+            $('a[href="#leave-status"]').click();
+        });
+    });
+    
+    $('#apply-leave').on('click','#view-leave-status',function () {
+        $('a[href="#leave-status"]').click();
+    });
+
+	</script>
+</body>
+</html>

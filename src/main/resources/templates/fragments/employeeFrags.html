@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"></meta>
+    <title>Employee Fragments</title>
+</head>
+<body>
+<th:block th:fragment="noLeave">
+    <div class="alert alert-success"><span class="glyphicon glyphicon-ok-sign"></span> No Leave to show status.</div>
+</th:block>
+
+<th:block th:fragment="applyLeave">
+    <div class="page-header"><h1>Apply for a leave</h1></div>
+    <form>
+        <div>
+            <div class="form-group col-md-4">
+                <label for="from-date">From </label>
+                <input type="text" class="form-control date-picker" id="from-date" placeholder="yyyy/mm/dd"
+                       required="required" name="fromDate"></input>
+            </div>
+            <div class="form-group col-md-4">
+                <label for="to-date">To </label>
+                <input type="text" class="form-control date-picker" id="to-date" placeholder="yyyy/mm/dd"
+                       required="required" name="toDate"></input>
+            </div>
+            <div class="form-group col-md-4">
+                <label for="leave-type">Type</label>
+                <select class="form-control" id="leave-type" name="leaveType">
+                    <option selected="selected">Casual</option>
+                    <option>Medical</option>
+                    <option>Paid</option>
+                </select>
+            </div>
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </div>
+    </form>
+</th:block>
+
+<th:block th:fragment="leaveListForEmployee">
+    <div class="page-header"><h1>Previous Leaves</h1></div>
+    <table class="table table-hover">
+        <thead>
+        <tr>
+            <td>#</td>
+            <td>Type</td>
+            <td>From</td>
+            <td>To</td>
+            <td>Status</td>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="leave,iterator:${leaves}">
+            <td th:text="${iterator.index+1}">Id</td>
+            <td th:text="${leave.leaveType}">Type</td>
+            <td th:text="${leave.fromDate}">From</td>
+            <td th:text="${leave.toDate}">To</td>
+            <td th:text="${leave.status}">Status</td>
+        </tr>
+        </tbody>
+    </table>
+</th:block>
+
+<th:block th:fragment="leavePendingAlert">
+    <div class="alert alert-warning"><span class="glyphicon glyphicon-info-sign"></span> A Leave
+        is already pending with your manager</div>
+    <a class="btn btn-primary" id="view-leave-status">View Leave Status</a>
+</th:block>
+
+<th:block th:fragment="leaveStatus">
+    <div>
+        <p>Status: <span th:text="${leave.status}" id="leave-status-text">status</span></p>
+        <p>Type: <span th:text="${leave.leaveType}">type</span></p>
+        <p>From: <span th:text="${leave.fromDate}">from</span></p>
+        <p>To: <span th:text="${leave.toDate}">to</span></p>
+        <a class="btn btn-success col-md-2" id="modify-leave">Cancel Leave</a>
+    </div>
+</th:block>
+
+</body>
+</html>
