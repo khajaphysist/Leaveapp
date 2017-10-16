@@ -4,7 +4,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.cassandra.config.CassandraCqlClusterFactoryBean;
 import org.springframework.data.cassandra.config.CassandraCqlSessionFactoryBean;
-import org.springframework.data.cassandra.config.CassandraSessionFactoryBean;
 import org.springframework.data.cassandra.core.cql.CqlOperations;
 import org.springframework.data.cassandra.core.cql.CqlTemplate;
 
@@ -37,7 +36,7 @@ public class CassandraConfig {
                         "  end_date DATE," +
                         "  status VARCHAR," +
                         "  type VARCHAR," +
-                        "  PRIMARY KEY ((employee_id), leave_id));"
+                        "  PRIMARY KEY ((employee_id, status), leave_id));"
         );
     }
 

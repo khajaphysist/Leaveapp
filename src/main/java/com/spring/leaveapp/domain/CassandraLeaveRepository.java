@@ -1,5 +1,6 @@
 package com.spring.leaveapp.domain;
 
+import com.datastax.driver.core.LocalDate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.cassandra.core.cql.CqlOperations;
 import org.springframework.data.cassandra.core.cql.RowMapper;
@@ -7,6 +8,9 @@ import org.springframework.stereotype.Repository;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 @Repository
@@ -29,7 +33,7 @@ public class CassandraLeaveRepository implements LeaveRepository {
     private final String DELETE_LEAVE = "DELETE FROM leaves WHERE leave_id = ? ALLOW FILTERING";
 
     private final String ACTIVE_LEAVE_BY_EMPLOYEE_ID = "SELECT * FROM leaves " +
-            "WHERE employee_id = ? AND status != 'Archived' ALLOW FILTERING";
+            "WHERE employee_id = ? AND status IN ('Pending', 'Accepted','Rejected') ALLOW FILTERING";
 
     private final String UPDATE_LEAVE = "UPDATE leaves SET " +
             "start_date = ?, end_date = ?, status = ?, type = ? " +
@@ -37,13 +41,18 @@ public class CassandraLeaveRepository implements LeaveRepository {
 
     @Override
     public void saveLeave(Leave leave) {
-        cqlOperations.execute(SAVE_LEAVE,
-                System.currentTimeMillis(),
-                leave.getEmployeeId(),
-                leave.getFromDate(),
-                leave.getToDate(),
-                leave.getStatus(),
-                leave.getLeaveType());
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd");
+        try {
+            cqlOperations.execute(SAVE_LEAVE,
+                    System.currentTimeMillis(),
+                    leave.getEmployeeId(),
+                    LocalDate.fromMillisSinceEpoch(dateFormat.parse(leave.getFromDate()).getTime()),
+                    LocalDate.fromMillisSinceEpoch(dateFormat.parse(leave.getToDate()).getTime()),
+                    leave.getStatus(),
+                    leave.getLeaveType());
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -73,12 +82,17 @@ public class CassandraLeaveRepository implements LeaveRepository {
 
     @Override
     public void updateLeave(Leave leave) {
-        cqlOperations.execute(UPDATE_LEAVE,
-                leave.getFromDate(),
-                leave.getToDate(),
-                leave.getStatus(),
-                leave.getLeaveType(),
-                leave.getId());
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd");
+        try {
+            cqlOperations.execute(UPDATE_LEAVE,
+                    LocalDate.fromMillisSinceEpoch(dateFormat.parse(leave.getFromDate()).getTime()),
+                    LocalDate.fromMillisSinceEpoch(dateFormat.parse(leave.getToDate()).getTime()),
+                    leave.getStatus(),
+                    leave.getLeaveType(),
+                    leave.getId());
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
     }
 
     private RowMapper<Leave> leaveRowMapper = (rs,row)-> new Leave(
