@@ -1,6 +1,5 @@
 package com.spring.leaveapp.domain;
 
-import javafx.util.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Controller;

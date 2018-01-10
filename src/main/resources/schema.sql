@@ -1,3 +1,8 @@
+DROP DATABASE IF EXISTS leaveapp;
+CREATE DATABASE leaveapp;
+
+USE leaveapp;
+
 CREATE TABLE IF NOT EXISTS employees (
   employee_id INT(11) NOT NULL AUTO_INCREMENT,
   name VARCHAR(45) NOT NULL,
@@ -16,6 +21,6 @@ CREATE TABLE IF NOT EXISTS leaves (
   PRIMARY KEY (leave_id),
   CONSTRAINT employee_id
     FOREIGN KEY (employee_id)
-    REFERENCES Employees (employee_id)
+    REFERENCES employees (employee_id)
     ON DELETE CASCADE
     ON UPDATE CASCADE);
